@@ -1,13 +1,24 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { BalanceCard, BudgetCard, PromoCard, TransactionsList } from "../components/dashboard-widgets";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "EZ Money | Overview" },
+    { name: "description", content: "Your money, moving in sync." },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <div className="overview-page">
+      <div className="overview-main-column">
+        <BalanceCard />
+        <TransactionsList />
+      </div>
+      <aside className="overview-side-column">
+        <PromoCard />
+        <BudgetCard />
+      </aside>
+    </div>
+  );
 }
