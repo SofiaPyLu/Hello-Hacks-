@@ -14,7 +14,8 @@ router.post("/", async (req, res) => {
   try {
     res.json(await generateAiSummary(month, readEntries()));
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ error: "internal server error" });
   }
 });
 

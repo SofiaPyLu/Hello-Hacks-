@@ -62,6 +62,10 @@ test("check 1: string body", () => {
   assert.equal(validateEntry("string").ok, false);
 });
 
+test("check 1: array body", () => {
+  assert.equal(validateEntry([1, 2]).ok, false);
+});
+
 test("check 2: missing month", () => {
   assert.match(validateEntry({ type: "cost" }).error, /YYYY-MM/);
 });

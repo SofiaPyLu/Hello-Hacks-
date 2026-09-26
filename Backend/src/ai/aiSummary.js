@@ -16,17 +16,17 @@ function buildFallbackSummary(current, previous) {
   const netProfit = current.netProfit;
   const outcome =
     netProfit >= 0
-      ? `$${netProfit.toLocaleString()} profit`
-      : `a $${Math.abs(netProfit).toLocaleString()} loss`;
+      ? `$${netProfit.toLocaleString("en-US")} profit`
+      : `a $${Math.abs(netProfit).toLocaleString("en-US")} loss`;
 
   const sentences = [
-    `In ${current.month}, revenue was $${current.totalRevenue.toLocaleString()} and costs were $${current.totalCosts.toLocaleString()}, leaving ${outcome} (${current.profitMargin}% margin).`,
+    `In ${current.month}, revenue was $${current.totalRevenue.toLocaleString("en-US")} and costs were $${current.totalCosts.toLocaleString("en-US")}, leaving ${outcome} (${current.profitMargin}% margin).`,
   ];
 
   if (previous && previous.totalRevenue > 0) {
     const profitChange = netProfit - previous.netProfit;
     sentences.push(
-      `Profit ${profitChange >= 0 ? "rose" : "fell"} by $${Math.abs(profitChange).toLocaleString()} compared to ${previous.month}.`,
+      `Profit ${profitChange >= 0 ? "rose" : "fell"} by $${Math.abs(profitChange).toLocaleString("en-US")} compared to ${previous.month}.`,
     );
   }
 
