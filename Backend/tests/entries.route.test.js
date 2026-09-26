@@ -10,6 +10,7 @@ const fixture = require("./fixtures/september.json");
 let dataFile;
 let server;
 let base;
+let costsBase;
 
 test.before(async () => {
   dataFile = path.join(os.tmpdir(), `backend-entries-${process.pid}.json`);
@@ -19,10 +20,13 @@ test.before(async () => {
   const app = express();
   app.use(express.json());
   app.use("/api/entries", require("../src/routes/entries"));
+  app.use("/api/costs", require("../src/routes/costs"));
 
   server = app.listen(0);
   await new Promise((resolve) => server.once("listening", resolve));
-  base = `http://127.0.0.1:${server.address().port}/api/entries`;
+  const origin = `http://127.0.0.1:${server.address().port}`;
+  base = `${origin}/api/entries`;
+  costsBase = `${origin}/api/costs`;
 });
 
 test.after(() => {
@@ -85,8 +89,16 @@ test("POST revenue without customers returns 400", async () => {
   assert.equal(res.status, 400);
 });
 
-// ponytail: /api/costs still returns 501 — enable once that route lands.
-test("costs total reflects a new entry", { skip: "costs route not implemented" }, () => {});
+test("costs total reflects a new entry", async () => {
+  // ponytail: delta, not an absolute baseline — earlier tests in this file share the data file.
+  const before = await (await fetch(`${costsBase}?month=2026-09`)).json();
+
+  await post(validCost);
+
+  const after = await (await fetch(`${costsBase}?month=2026-09`)).json();
+  assert.equal(after.total, before.total + 500);
+  assert.equal(after.bySubcategory.food.meats, before.bySubcategory.food.meats + 500);
+});
 
 test("PUT with a valid id returns the updated entry", async () => {
   const created = await (await post(validCost)).json();

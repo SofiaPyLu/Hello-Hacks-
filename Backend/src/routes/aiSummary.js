@@ -1,6 +1,21 @@
 const express = require("express");
 const router = express.Router();
 
-router.post("/", (req, res) => res.status(501).json({ error: "not implemented" }));
+const { generateAiSummary } = require("../ai/aiSummary");
+const { readEntries } = require("../store");
+const { isValidMonth } = require("../utils/month");
+
+router.post("/", async (req, res) => {
+  const month = req.body && req.body.month;
+  if (!isValidMonth(month)) {
+    return res.status(400).json({ error: "month is required in format YYYY-MM" });
+  }
+
+  try {
+    res.json(await generateAiSummary(month, readEntries()));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;
