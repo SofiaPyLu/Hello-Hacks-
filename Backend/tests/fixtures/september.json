@@ -1,0 +1,18 @@
+[
+  { "id": 1, "month": "2026-09", "type": "cost", "category": "utilities", "subcategory": "rent", "amount": 4000 },
+  { "id": 2, "month": "2026-09", "type": "cost", "category": "utilities", "subcategory": "electricity", "amount": 900 },
+  { "id": 3, "month": "2026-09", "type": "cost", "category": "utilities", "subcategory": "water", "amount": 300 },
+  { "id": 4, "month": "2026-09", "type": "cost", "category": "hidden", "subcategory": "maintenance", "amount": 600 },
+  { "id": 5, "month": "2026-09", "type": "cost", "category": "hidden", "subcategory": "furniture-damage", "amount": 200 },
+  { "id": 6, "month": "2026-09", "type": "cost", "category": "hidden", "subcategory": "emergency-reserve", "amount": 500 },
+  { "id": 7, "month": "2026-09", "type": "cost", "category": "food", "subcategory": "vegetables", "amount": 3000 },
+  { "id": 8, "month": "2026-09", "type": "cost", "category": "food", "subcategory": "meats", "amount": 5400 },
+  { "id": 9, "month": "2026-09", "type": "cost", "category": "food", "subcategory": "beverages", "amount": 2400 },
+  { "id": 10, "month": "2026-09", "type": "cost", "category": "food", "subcategory": "processed", "amount": 1800 },
+  { "id": 11, "month": "2026-09", "type": "cost", "category": "salaries", "subcategory": "chef", "count": 2, "payPerPerson": 3200, "amount": 6400 },
+  { "id": 12, "month": "2026-09", "type": "cost", "category": "salaries", "subcategory": "waiter", "count": 4, "payPerPerson": 1800, "amount": 7200 },
+  { "id": 13, "month": "2026-09", "type": "cost", "category": "salaries", "subcategory": "host", "count": 1, "payPerPerson": 2000, "amount": 2000 },
+  { "id": 14, "month": "2026-09", "type": "revenue", "category": "sales", "subcategory": "dine-in", "amount": 28000, "customers": 950 },
+  { "id": 15, "month": "2026-09", "type": "revenue", "category": "sales", "subcategory": "takeout", "amount": 8000, "customers": 300 },
+  { "id": 16, "month": "2026-09", "type": "revenue", "category": "sales", "subcategory": "delivery", "amount": 6000, "customers": 150 }
+]
