@@ -10,6 +10,9 @@ const pageTitles: Record<string, string> = {
   "/scheduled": "Scheduled payments",
   "/payment-request": "Payment requests",
   "/invoicing": "Invoicing",
+  "/forecast": "Forecasting",
+  "/scenarios": "Scenarios",
+  "/cash-gap": "Cash Gap",
 };
 
 type TopBarProps = { onMenuClick: () => void };
