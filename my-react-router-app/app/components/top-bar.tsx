@@ -4,9 +4,8 @@ import { Icon } from "./icon";
 const pageTitles: Record<string, string> = {
   "/": "Overview",
   "/transactions": "Transactions",
-  "/card": "My card",
   "/insights": "Insights",
-  "/recipient": "Recipients",
+  
   "/scheduled": "Scheduled payments",
   "/payment-request": "Payment requests",
   "/invoicing": "Invoicing",
@@ -24,7 +23,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
         <Icon name="menu" />
       </button>
       <div className="top-heading">
-        <p className="welcome-line">Welcome back, Karan <span>✦</span></p>
+        <p className="welcome-line">Welcome back, Shawn <span>✦</span></p>
         <h1>{title}</h1>
       </div>
       <div className="top-actions">
@@ -37,9 +36,9 @@ export function TopBar({ onMenuClick }: TopBarProps) {
           <Icon name="bell" />
           <span />
         </button>
-        <button aria-label="Open Karan's profile" className="profile-button">
-          <span className="avatar">K</span>
-          <span className="profile-name">Karan J.</span>
+        <button aria-label="Open Shawn Mendes's profile" className="profile-button">
+          <span className="avatar">S</span>
+          <span className="profile-name">Shawn Mendes</span>
           <Icon className="profile-chevron" name="chevron" />
         </button>
       </div>

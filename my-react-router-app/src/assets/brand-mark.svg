@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="loop" x1="9" y1="53" x2="55" y2="11" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5DC07E" />
+      <stop offset="1" stop-color="#CAF359" />
+    </linearGradient>
+  </defs>
+  <path d="M46.7 19A22 22 0 1 0 54 34" stroke="url(#loop)" stroke-width="4.5" stroke-linecap="round" />
+  <path d="m48.1 27.1 10 5.9-9.3 6.5" fill="#CAF359" />
+  <text x="32" y="30" fill="#F2FCF2" font-family="Avenir Next, Arial, sans-serif" font-size="16" font-weight="800" text-anchor="middle" letter-spacing="0.3">EZ</text>
+  <text x="32" y="46" fill="#CAF359" stroke="#12362C" stroke-width="0.6" paint-order="stroke fill" font-family="Avenir Next, Arial, sans-serif" font-size="14" font-weight="900" text-anchor="middle">$</text>
+</svg>

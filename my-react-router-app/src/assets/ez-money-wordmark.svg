@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120" fill="none" role="img" aria-labelledby="title">
+  <title id="title">EZ dollar sign logo</title>
+  <rect x="5" y="5" width="350" height="110" rx="28" fill="#F4F8F5" />
+  <text x="35" y="82" fill="#173B2B" font-family="Inter, Avenir Next, Arial, sans-serif" font-size="68" font-weight="800" letter-spacing="-4">EZ</text>
+  <circle cx="269" cy="60" r="39" fill="#2F8F5B" />
+  <text x="269" y="82" fill="#FFFFFF" font-family="Inter, Avenir Next, Arial, sans-serif" font-size="60" font-weight="700" text-anchor="middle">$</text>
+</svg>

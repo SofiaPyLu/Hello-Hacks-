@@ -1,18 +1,18 @@
 import { NavLink } from "react-router";
 import { Icon } from "./icon";
+import ezMoneyLogo from "../../src/assets/gemini-logo.png";
 
 const walletLinks = [
   { label: "Home", to: "/", icon: "home" },
   { label: "Transactions", to: "/transactions", icon: "receipt" },
-  { label: "Card", to: "/card", icon: "card" },
   { label: "Insights", to: "/insights", icon: "chart" },
-  { label: "Recipient", to: "/recipient", icon: "users" },
+
 ] as const;
 
 const paymentLinks = [
   { label: "Scheduled", to: "/scheduled", icon: "calendar" },
-  { label: "Payment Request", to: "/payment-request", icon: "send" },
-  { label: "Invoicing", to: "/invoicing", icon: "file" },
+
+
 ] as const;
 
 type SidebarProps = { open: boolean; onClose: () => void };
@@ -28,11 +28,13 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       />
       <aside className={`sidebar${open ? " is-open" : ""}`}>
         <NavLink className="brand-lockup" onClick={onClose} to="/">
-          <span className="brand-mark">C</span>
-          <span>cash<span className="brand-light">sync</span></span>
+          <span className="brand-logo-frame">
+            <img alt="EZ Money logo" src={ezMoneyLogo} />
+          </span>
+          <span className="brand-name">EZ <span>Money</span></span>
         </NavLink>
         <nav aria-label="Main navigation" className="side-navigation">
-          <p className="nav-section-title">WALLET</p>
+          <p className="nav-section-title">MONEY MANAGEMENT</p>
           <ul className="nav-list">
             {walletLinks.map((item) => (
               <li key={item.to}>
@@ -49,7 +51,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
               </li>
             ))}
           </ul>
-          <p className="nav-section-title payment-title">PAYMENT</p>
+          <p className="nav-section-title payment-title">FORECASTING</p>
           <ul className="nav-list">
             {paymentLinks.map((item) => (
               <li key={item.to}>
