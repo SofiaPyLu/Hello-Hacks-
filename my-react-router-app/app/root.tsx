@@ -8,9 +8,11 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
+import ezMoneyLogo from "../src/assets/gemini-logo.png";
 import "./app.css";
 
 export const links: Route.LinksFunction = () => [
+  { rel: "icon", type: "image/png", href: ezMoneyLogo },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",

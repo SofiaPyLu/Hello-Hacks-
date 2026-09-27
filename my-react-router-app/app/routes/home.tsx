@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { BalanceCard, BudgetCard, PromoCard, TransactionsList } from "../components/dashboard-widgets";
+import { BalanceCard, BudgetCard, TransactionsList } from "../components/dashboard-widgets";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -16,7 +16,6 @@ export default function Home() {
         <TransactionsList />
       </div>
       <aside className="overview-side-column">
-        <PromoCard />
         <BudgetCard />
       </aside>
     </div>

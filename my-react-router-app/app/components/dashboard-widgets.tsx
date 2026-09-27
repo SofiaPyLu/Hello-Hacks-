@@ -1,28 +1,30 @@
+import { useState, type KeyboardEvent } from "react";
 import { Icon } from "./icon";
 
-const transactions = [
-  { name: "Food", category: "Groceries · Visa ending 2847", date: "Today, 10:42 AM", amount: "−$86.40", incoming: false, initials: "W", tone: "orange" },
-  { name: "Employee Salary", category: "Income · Direct deposit", date: "Today, 8:15 AM", amount: "+$4,850.00", incoming: true, initials: "A", tone: "mint" },
-  { name: "Utilities", category: "Rent, electricity, water, etc. · Visa ending 2847", date: "Yesterday", amount: "−$10.99", incoming: false, initials: "S", tone: "green" },
-  { name: "Hidden costs", category: "Damages, stolen items, etc. · Visa ending 2847", date: "Sep 22, 2026", amount: "−$248.00", incoming: false, initials: "A", tone: "rose" },
+const costs = [
+  { name: "Food", category: "Groceries", date: "Today, 10:42 AM", amount: "−$86.40", initials: "F", tone: "cost-food" },
+  { name: "Employee salary", category: "Chef, waiter/waitress, host", date: "Today, 8:15 AM", amount: "−$4,850.00", initials: "E", tone: "cost-salary" },
+  { name: "Utilities", category: "Electricity, rent, water", date: "Yesterday", amount: "−$10,099.00", initials: "U", tone: "cost-utilities" },
+  { name: "Hidden costs", category: "Emergency reserve, maintenance,  furniture damage", date: "Sep 22, 2026", amount: "−$248.00", initials: "H", tone: "cost-hidden" },
+];
+
+const earnings = [
+  { name: "Food", category: "Revenue · Main account", date: "Today, 9:28 AM", amount: "+$12,400.00", initials: "F", tone: "earning-food" },
+  { name: "Beverage", category: "Revenue · Main account", date: "Sep 23, 2026", amount: "+$5,620.00", initials: "B", tone: "earning-beverage" },
+  { name: "Delivery/takeout orders", category: "Revenue · Main account", date: "Sep 21, 2026", amount: "+$400.00", initials: "D", tone: "earning-delivery" },
 ];
 
 export function BalanceCard() {
   return (
-    <section aria-label="Account balance" className="balance-card">
+    <section aria-label="Monthly revenue" className="balance-card">
       <div className="balance-topline">
-        <div><span className="balance-label">Total balance</span><span className="balance-account">Main account · USD <span className="balance-chevron">⌄</span></span></div>
-        <span className="balance-chip"><span /> Active</span>
+        <div><span className="balance-label">Revenue this month</span><span className="balance-account">September 2026 · CAD</span></div>
+        <span className="balance-chip"><span /> Monthly total</span>
       </div>
-      <p className="balance-amount">$12,030<span>.00</span><small>USD</small></p>
+      <p className="balance-amount">$18,420<span>.00</span><small>CAD</small></p>
       <p className="balance-change"><span>↗ 12.8%</span> <span>vs. last month</span></p>
       <div className="balance-bottom">
-        <div className="balance-actions">
-          <button className="balance-action primary-action"><Icon name="send" /> Transfer</button>
-          <button className="balance-action"><Icon name="arrowDown" /> Request</button>
-          <button className="balance-action"><Icon name="plus" /> Deposit</button>
-        </div>
-        <div aria-label="Balance trend over the last week" className="balance-sparkline">
+        <div aria-label="Revenue trend over the last week" className="balance-sparkline">
           {[28, 39, 34, 50, 42, 66, 56, 75, 61, 84, 70, 96, 78, 100].map((height, index) => (
             <span key={index} style={{ height: `${height}%` }} />
           ))}
@@ -33,31 +35,73 @@ export function BalanceCard() {
 }
 
 export function TransactionsList() {
+  const [activeTab, setActiveTab] = useState<"costs" | "earnings">("costs");
+  const isCosts = activeTab === "costs";
+  const entries = isCosts ? costs : earnings;
+  const handleTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    const nextTab = isCosts ? "earnings" : "costs";
+    setActiveTab(nextTab);
+    document.getElementById(`${nextTab}-tab`)?.focus();
+  };
+
   return (
     <section className="content-panel transactions-panel">
       <div className="panel-heading">
-        <div><h2>Recent transactions</h2><p>Your latest account activity</p></div>
+        <div><h2>Earnings &amp; costs</h2><p>Keep track of money coming in and going out</p></div>
         <a className="text-link" href="/transactions">View all <Icon name="chevron" /></a>
       </div>
-      <div className="transaction-table">
-        {transactions.map((transaction) => (
-          <article className="transaction-row" key={`${transaction.name}-${transaction.date}`}>
-            <span className={`transaction-avatar ${transaction.tone}`}>{transaction.initials}</span>
-            <div className="transaction-details"><strong>{transaction.name}</strong><span>{transaction.category}</span></div>
-            <time className="transaction-date">{transaction.date}</time>
-            <strong className={`transaction-amount${transaction.incoming ? " is-incoming" : ""}`}>{transaction.amount}</strong>
-          </article>
-        ))}
+      <div aria-label="Choose earnings or costs" className="activity-tabs" role="tablist">
+        <button
+          aria-controls="activity-panel"
+          aria-selected={isCosts}
+          className={`activity-tab${isCosts ? " is-active" : ""}`}
+          id="costs-tab"
+          onKeyDown={handleTabKeyDown}
+          onClick={() => setActiveTab("costs")}
+          role="tab"
+          tabIndex={isCosts ? 0 : -1}
+          type="button"
+        >
+          Costs <span>$15,283.40</span>
+        </button>
+        <button
+          aria-controls="activity-panel"
+          aria-selected={!isCosts}
+          className={`activity-tab${!isCosts ? " is-active" : ""}`}
+          id="earnings-tab"
+          onKeyDown={handleTabKeyDown}
+          onClick={() => setActiveTab("earnings")}
+          role="tab"
+          tabIndex={!isCosts ? 0 : -1}
+          type="button"
+        >
+          Earnings <span>$18,420.00</span>
+        </button>
       </div>
-    </section>
-  );
-}
-
-export function PromoCard() {
-  return (
-    <section className="promo-card">
-      <div className="promo-copy"><span className="promo-eyebrow">GROW TOGETHER</span><h2>Good things<br />are better shared.</h2><p>Invite a friend and you could both get $600.</p><button className="promo-button">Invite a friend <Icon name="arrowUp" /></button></div>
-      <div aria-hidden="true" className="promo-art"><span className="promo-ring ring-one" /><span className="promo-ring ring-two" /><span className="promo-token">$</span><span className="promo-spark">✳</span></div>
+      <div className="transaction-table">
+        <div
+          aria-labelledby={isCosts ? "costs-tab" : "earnings-tab"}
+          className="activity-tabpanel"
+          id="activity-panel"
+          role="tabpanel"
+          tabIndex={0}
+        >
+          <div className="activity-total">
+            <span>{isCosts ? "Total costs this month" : "Total revenue this month"}</span>
+            <strong className={isCosts ? "is-cost" : "is-incoming"}>{isCosts ? "$15,283.40" : "$18,420.00"}</strong>
+          </div>
+          {entries.map((entry) => (
+            <article className="transaction-row" key={`${entry.name}-${entry.date}`}>
+              <span className={`transaction-avatar ${entry.tone}`}>{entry.initials}</span>
+              <div className="transaction-details"><strong>{entry.name}</strong><span>{entry.category}</span></div>
+              <time className="transaction-date">{entry.date}</time>
+              <strong className={`transaction-amount${isCosts ? " is-cost" : " is-incoming"}`}>{entry.amount}</strong>
+            </article>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
@@ -66,12 +110,10 @@ export function BudgetCard() {
   return (
     <section className="content-panel budget-panel">
       <div className="panel-heading"><div><h2>Overall budget</h2><p>September 2026</p></div><button aria-label="Budget options" className="more-button">···</button></div>
-      <div className="budget-amount-line"><span>Total budget</span><strong>$6,000<span> / $8,500</span></strong></div>
-      <div aria-label="71 percent of monthly budget used" className="budget-track" role="progressbar" aria-valuenow={71} aria-valuemin={0} aria-valuemax={100}><span /></div>
-      <div className="budget-foot"><span><i /> Spent this month</span><strong>$6,000</strong></div>
-      <div className="budget-foot remaining"><span><i /> Left to spend</span><strong>$2,500</strong></div>
-      <div className="budget-category"><span className="category-icon"><Icon name="card" /></span><span><strong>Daily expenses</strong><small>Food, transport & more</small></span><span className="category-total">$2,340</span></div>
-      <div className="budget-category"><span className="category-icon category-icon-lime"><Icon name="home" /></span><span><strong>Home & bills</strong><small>Rent, utilities</small></span><span className="category-total">$2,100</span></div>
+      <div className="budget-amount-line"><span>Total budget</span><strong>$15,283.40<span> / $18,000.00</span></strong></div>
+      <div aria-label="85 percent of monthly budget used" className="budget-track" role="progressbar" aria-valuenow={85} aria-valuemin={0} aria-valuemax={100}><span /></div>
+      <div className="budget-foot"><span><i /> Spent this month</span><strong>$15,283.40</strong></div>
+      <div className="budget-foot remaining"><span><i /> Left to spend</span><strong>$2,716.60</strong></div>
     </section>
   );
 }

@@ -1,12 +1,12 @@
 import { NavLink } from "react-router";
 import { Icon } from "./icon";
+import ezMoneyLogo from "../../src/assets/gemini-logo.png";
 
 const walletLinks = [
   { label: "Home", to: "/", icon: "home" },
   { label: "Transactions", to: "/transactions", icon: "receipt" },
-  { label: "Card", to: "/card", icon: "card" },
   { label: "Insights", to: "/insights", icon: "chart" },
-  { label: "Recipient", to: "/recipient", icon: "users" },
+
 ] as const;
 
 const paymentLinks = [
@@ -48,8 +48,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         </NavLink>
 
         <nav aria-label="Main navigation" className="side-navigation">
-          <p className="nav-section-title">WALLET</p>
-
+          <p className="nav-section-title">MONEY MANAGEMENT</p>
           <ul className="nav-list">
             {walletLinks.map((item) => (
               <li key={item.to}>
@@ -71,9 +70,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
               </li>
             ))}
           </ul>
-
-          <p className="nav-section-title payment-title">PAYMENT</p>
-
+          <p className="nav-section-title payment-title">FORECASTING</p>
           <ul className="nav-list">
             {paymentLinks.map((item) => (
               <li key={item.to}>
