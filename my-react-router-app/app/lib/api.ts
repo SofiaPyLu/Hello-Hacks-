@@ -1,4 +1,4 @@
-import type { Costs, Entry, HistoryRow, Revenue, Summary } from "./types";
+import type { Cell, Costs, Entry, HistoryRow, Revenue, Sheet, Summary } from "./types";
 
 export const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3001";
 
@@ -45,3 +45,17 @@ export const deleteEntry = (id: number) =>
   request<{ deleted: number }>(`/api/entries/${id}`, { method: "DELETE" });
 export const resetData = (mode: "empty" | "demo") =>
   request<{ mode: string; entries: number }>("/api/data/reset", json({ mode }));
+
+export const getSheet = () => request<Sheet>("/api/sheet");
+export const setSheetCell = (
+  month: string,
+  category: string,
+  subcategory: string,
+  body: Record<string, unknown>,
+) =>
+  request<{ month: string; category: string; subcategory: string; cell: Cell }>(
+    `/api/sheet/${month}/${category}/${subcategory}`,
+    { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) },
+  );
+export const copyMonth = (from: string, to: string) =>
+  request<{ month: string; copied: number }>("/api/sheet/months", json({ from, to }));

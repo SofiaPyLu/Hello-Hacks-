@@ -1,0 +1,309 @@
+/* Scenario planner additions. The page frame itself comes from app.css. */
+
+.starting-from {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.starting-label {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.scenario-banner h2 {
+  max-width: 760px;
+}
+
+.yearly-impact {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* The banner is dark green, so these have to be light enough to read on it. */
+.yearly-impact.is-up {
+  color: #d7f12f;
+}
+
+.yearly-impact.is-down {
+  color: #ffc2bd;
+}
+
+.delta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 8px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.delta-badge.is-good {
+  background: #e7f4e9;
+  color: #2f7d52;
+}
+
+.delta-badge.is-bad {
+  background: #fbeeed;
+  color: #a95f5d;
+}
+
+.delta-flat {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.chart-title {
+  margin: 0;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 650;
+}
+
+/* Lever panel */
+.lever-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.lever-group {
+  display: grid;
+  gap: 9px;
+}
+
+.lever-group h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.lever-group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.lever-reset {
+  border: 0;
+  background: none;
+  color: #49835e;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.scenario-chip {
+  padding: 6px 11px;
+  border: 1px solid #d3e3d7;
+  border-radius: 999px;
+  background: #fff;
+  color: #2c4a3a;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.scenario-chip:hover {
+  border-color: #9fc7ab;
+}
+
+.scenario-chip.is-active {
+  border-color: #207f66;
+  background: #207f66;
+  color: #fff;
+}
+
+/* Team steppers */
+.staff-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.staff-row.is-changed {
+  border-color: #c6e0cd;
+  background: #f4faf4;
+}
+
+.staff-name {
+  color: #4f5e56;
+  font-size: 14px;
+}
+
+.staff-name strong {
+  margin-left: 4px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.staff-cost {
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.stepper {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.stepper button {
+  width: 27px;
+  height: 27px;
+  border: 1px solid #cfe0d4;
+  border-radius: 7px;
+  background: #fff;
+  color: #23513e;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.stepper button:hover:not(:disabled) {
+  border-color: #8fbf9f;
+  background: #f1f9f2;
+}
+
+.stepper button:disabled {
+  color: #bfcbc4;
+  cursor: not-allowed;
+}
+
+/* Sliders */
+.slider-row {
+  display: grid;
+  gap: 3px;
+  padding: 5px 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.slider-row.is-changed {
+  border-color: #c6e0cd;
+  background: #f4faf4;
+}
+
+.slider-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  color: #4f5e56;
+  font-size: 14px;
+}
+
+.slider-label strong {
+  color: var(--forest);
+  font-variant-numeric: tabular-nums;
+}
+
+.slider-row input[type="range"] {
+  width: 100%;
+  accent-color: #207f66;
+  cursor: pointer;
+}
+
+.slider-hint {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+/* Comparison table */
+.comparison-card {
+  min-width: 0;
+}
+
+.comparison-table {
+  width: 100%;
+  margin-top: 12px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 7px 9px;
+  border-bottom: 1px solid var(--line);
+  text-align: right;
+}
+
+.comparison-table th[scope="row"],
+.comparison-table thead th:first-child {
+  color: #4f5e56;
+  font-weight: 500;
+  text-align: left;
+}
+
+.comparison-table thead th {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+}
+
+.comparison-table td {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.comparison-table .comparison-section th {
+  padding-top: 13px;
+  border-bottom: 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.comparison-table tr.is-changed th,
+.comparison-table tr.is-changed td {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.comparison-table .is-up {
+  color: #2f7d52;
+}
+
+.comparison-table .is-down {
+  color: #a95f5d;
+}
+
+.status-value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}

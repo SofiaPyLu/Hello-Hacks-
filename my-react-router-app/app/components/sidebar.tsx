@@ -5,6 +5,7 @@ import ezMoneyLogo from "../../src/assets/gemini-logo.png";
 const walletLinks = [
   { label: "Home", to: "/", icon: "home" },
   { label: "Transactions", to: "/transactions", icon: "receipt" },
+  { label: "Ledger", to: "/ledger", icon: "table" },
   { label: "Insights", to: "/insights", icon: "chart" },
 
 ] as const;

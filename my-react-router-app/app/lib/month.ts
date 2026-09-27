@@ -8,3 +8,9 @@ export function resolveMonth(request: Request, history: HistoryRow[]) {
   const now = new Date();
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 }
+
+export function nextMonth(month: string) {
+  const [year, monthNumber] = month.split("-").map(Number);
+  const rolls = monthNumber === 12;
+  return `${rolls ? year + 1 : year}-${String(rolls ? 1 : monthNumber + 1).padStart(2, "0")}`;
+}

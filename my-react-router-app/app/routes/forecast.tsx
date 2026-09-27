@@ -1,142 +1,282 @@
 import { useState } from "react";
-import { useRouteError } from "react-router";
-import { CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Link, useRouteError } from "react-router";
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import type { Route } from "./+types/forecast";
 import { BackendError } from "../components/backend-error";
-import { getHistory } from "../lib/api";
-import { formatMoney, monthLabel, shortMonth } from "../lib/format";
-import type { HistoryRow } from "../lib/types";
+import { ComparisonTable } from "../components/forecast/comparison-table";
+import { LeverPanel } from "../components/forecast/lever-panel";
+import { MonthPicker } from "../components/month-picker";
+import { getCosts, getHistory, getRevenue } from "../lib/api";
+import { formatMoney, formatPercent, monthLabel } from "../lib/format";
+import { resolveMonth } from "../lib/month";
+import {
+  NO_CHANGE,
+  applyScenario,
+  buildBaseline,
+  describeScenario,
+  hasChanges,
+  type Levers,
+  type Outcome,
+} from "../lib/scenario";
+import "../styles/forecast.css";
 
-export async function clientLoader() {
-  return { history: await getHistory() };
+const TODAY_COLOR = "#9ab3a8";
+const SCENARIO_COLOR = "#207f66";
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "EZ Money | Forecast" },
+    { name: "description", content: "Try changes on a copy of your numbers." },
+  ];
+}
+
+export async function clientLoader({ request }: Route.ClientLoaderArgs) {
+  const history = await getHistory();
+  const month = resolveMonth(request, history);
+  const [costs, revenue] = await Promise.all([getCosts(month), getRevenue(month)]);
+  return { month, costs, revenue };
 }
 clientLoader.hydrate = true as const;
 
 export function HydrateFallback() {
-  return <section className="content-panel empty-state-panel"><h3>Loading your forecast…</h3><p>Using your recorded earnings and costs.</p></section>;
+  return (
+    <section className="content-panel empty-state-panel">
+      <h3>Loading your numbers…</h3>
+      <p>Making a copy you can safely experiment on.</p>
+    </section>
+  );
 }
 
 export function ErrorBoundary() {
   return <BackendError error={useRouteError()} />;
 }
 
-function addMonths(month: string, count: number) {
-  const [year, number] = month.split("-").map(Number);
-  const date = new Date(year, number - 1 + count, 1);
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-}
-
-function averageChange(rows: HistoryRow[], key: "totalRevenue" | "totalCosts" | "netProfit") {
-  const recent = rows.slice(-4);
-  if (recent.length < 2) return 0;
-  const changes = recent.slice(1).map((row, index) => row[key] - recent[index][key]);
-  return changes.reduce((sum, change) => sum + change, 0) / changes.length;
-}
-
-function sumNextThreeMonths(latest: number, monthlyChange: number, floorAtZero = false) {
-  return [1, 2, 3].reduce((sum, offset) => {
-    const projected = latest + monthlyChange * offset;
-    return sum + (floorAtZero ? Math.max(0, projected) : projected);
-  }, 0);
-}
-
-type ForecastRow = { month: string; revenue: number; profit: number; projected?: boolean };
-
-function makeForecast(history: HistoryRow[]): ForecastRow[] {
-  const actuals: ForecastRow[] = history.slice(-6).map((row) => ({
-    month: row.month,
-    revenue: row.totalRevenue,
-    profit: row.netProfit,
-  }));
-  if (history.length === 0) return [];
-  const last = history[history.length - 1];
-  const revenueChange = averageChange(history, "totalRevenue");
-  const profitChange = averageChange(history, "netProfit");
-  for (let offset = 1; offset <= 3; offset += 1) {
-    const revenue = Math.max(0, last.totalRevenue + revenueChange * offset);
-    const profit = last.netProfit + profitChange * offset;
-    actuals.push({
-      month: addMonths(last.month, offset),
-      revenue,
-      profit,
-      projected: true,
-    });
-  }
-  return actuals;
-}
-
 export default function Forecast({ loaderData }: Route.ComponentProps) {
-  const { history } = loaderData;
-  const [monthlyCost, setMonthlyCost] = useState(3200);
-  const [startMonth, setStartMonth] = useState(() => history.length ? addMonths(history[history.length - 1].month, 1) : "");
-  const [metric, setMetric] = useState<"revenue" | "profit">("revenue");
-  const chartData = makeForecast(history);
-  const latest = history[history.length - 1];
-  const revenueTrend = averageChange(history, "totalRevenue");
-  const profitTrend = averageChange(history, "netProfit");
-  const projectedRevenue = latest ? sumNextThreeMonths(latest.totalRevenue, revenueTrend, true) : 0;
-  const projectedProfit = latest ? sumNextThreeMonths(latest.netProfit, profitTrend) : 0;
-  const addedCostMonths = latest && startMonth ? Math.max(0,
-    (Number(latest.month.slice(0, 4)) - Number(startMonth.slice(0, 4))) * 12 + Number(latest.month.slice(5)) - Number(startMonth.slice(5)) + 4,
-  ) : 0;
-  const scenarioProfit = projectedProfit - monthlyCost * addedCostMonths;
-  const nextMonth = latest ? addMonths(latest.month, 1) : "";
+  const { month, costs, revenue } = loaderData;
+  const isEmptyMonth = costs.entries.length === 0 && revenue.entries.length === 0;
 
   return (
     <div className="forecast-figma-page">
       <div className="forecast-layout">
         <main className="forecast-workspace">
-          <div className="forecast-breadcrumbs"><span>Forecasting</span><span className="divider">/</span><span>Based on your data</span></div>
+          <div className="forecast-breadcrumbs">
+            <span>Forecasting</span>
+            <span className="divider">/</span>
+            <span>Nothing here is saved</span>
+          </div>
+
           <div className="forecast-window">
             <header className="forecast-topline">
-              <div className="forecast-title-wrap"><h1>A clearer view of what&apos;s next.</h1><p>Projections use your recent monthly earnings and costs.</p></div>
-              <div className="topline-actions"><span className="topline-select">{history.length ? `Through ${monthLabel(latest.month)}` : "No recorded data"}</span></div>
+              <div className="forecast-title-wrap">
+                <h1>What if…?</h1>
+                <p>Try changes on a copy of your numbers. Nothing here is saved.</p>
+              </div>
+              <div className="topline-actions starting-from">
+                <span className="starting-label">Starting from</span>
+                <MonthPicker month={month} />
+              </div>
             </header>
 
-            {history.length === 0 ? (
-              <section className="forecast-banner"><div><span className="banner-label">YOUR FORECAST</span><h2>Add a transaction to get started.</h2><p>Once you record earnings or costs, this page will project the next three months from your data.</p></div><a className="is-gold" href="/transactions">Add transaction →</a></section>
-            ) : <>
+            {isEmptyMonth ? (
               <section className="forecast-banner">
-                <div><span className="banner-label">NEXT 3 MONTHS · ESTIMATE</span><h2>{profitTrend >= 0 ? "Your recent trend points to positive movement." : "Your recent trend points to tighter margins."}</h2><p>Based on the average month-to-month change in your last four recorded months. This is a simple estimate, not a cash-flow statement.</p></div>
-              </section>
-
-              <section className="stats-row">
-                <div className="stat-card"><div className="stat-label">Projected revenue · next 3 months</div><div className="stat-value">{formatMoney(projectedRevenue)}</div><div className="stat-delta">Estimated from recent revenue trend</div></div>
-                <div className="stat-card"><div className="stat-label">Projected net profit · next 3 months</div><div className="stat-value">{formatMoney(projectedProfit)}</div><div className="stat-delta">Before any new scenario costs</div></div>
-                <div className="stat-card"><div className="stat-label">Latest month revenue</div><div className="stat-value">{formatMoney(latest.totalRevenue)}</div><div className="stat-delta">{monthLabel(latest.month)}</div></div>
-                <div className="stat-card"><div className="stat-label">Latest month net profit</div><div className="stat-value">{formatMoney(latest.netProfit)}</div><div className="stat-delta">{monthLabel(latest.month)}</div></div>
-              </section>
-
-              <section className="forecast-main-grid">
-                <div className="chart-card">
-                  <div className="chart-header-row"><div className="tabs">
-                    <button aria-pressed={metric === "revenue"} className={`tab${metric === "revenue" ? " is-active" : ""}`} onClick={() => setMetric("revenue")} type="button">Revenue</button>
-                    <button aria-pressed={metric === "profit"} className={`tab${metric === "profit" ? " is-active" : ""}`} onClick={() => setMetric("profit")} type="button">Net profit</button>
-                  </div><span className="filter-pill">Monthly · 3 month estimate</span></div>
-                  <div className="chart-wrap"><ResponsiveContainer height={300} width="100%">
-                    <ComposedChart data={chartData} margin={{ top: 12, right: 8, left: 8, bottom: 8 }}>
-                      <CartesianGrid stroke="#dfe9e5" strokeDasharray="3 3" vertical={false} />
-                      <XAxis dataKey="month" axisLine={false} tickLine={false} tickFormatter={shortMonth} tick={{ fill: "#7a8885", fontSize: 11 }} />
-                      <YAxis axisLine={false} tickLine={false} tickFormatter={(value: number) => `${Math.round(value / 1000)}k`} tick={{ fill: "#7a8885", fontSize: 11 }} />
-                      <Tooltip formatter={(value: number) => [formatMoney(value), ""]} labelFormatter={(label: string) => `${monthLabel(label)}${chartData.find((row) => row.month === label)?.projected ? " · estimate" : " · actual"}`} contentStyle={{ borderRadius: 12, border: "1px solid #dfe7e2", background: "#fff" }} />
-                      {metric === "revenue" ? <Line dataKey="revenue" name="Revenue" stroke="#145b49" strokeWidth={2.5} dot={(props: { cx?: number; cy?: number; payload?: ForecastRow }) => <circle cx={props.cx} cy={props.cy} r={4} fill={props.payload?.projected ? "#d4e985" : "#145b49"} stroke="#145b49" />} connectNulls /> : <Line dataKey="profit" name="Net profit" stroke="#145b49" strokeWidth={2.5} dot={(props: { cx?: number; cy?: number; payload?: ForecastRow }) => <circle cx={props.cx} cy={props.cy} r={4} fill={props.payload?.projected ? "#d4e985" : "#145b49"} stroke="#145b49" />} connectNulls />}
-                    </ComposedChart>
-                  </ResponsiveContainer></div>
-                  <div className="chart-legend"><span><i className="swatch expected" />Recorded</span><span><i className="swatch stronger" />Estimate</span></div>
-                  <p className="stat-delta">Estimates extend the average monthly change from up to four recorded months.</p>
+                <div>
+                  <span className="banner-label">NOTHING TO WORK FROM</span>
+                  <h2>{monthLabel(month)} has no entries yet.</h2>
+                  <p>
+                    Add a month in the <Link to="/ledger">Ledger</Link>, or record earnings and costs
+                    on the <Link to="/transactions">Transactions page</Link>, then come back to try
+                    changes against it.
+                  </p>
                 </div>
-
-                <div className="right-panel"><div className="mini-card soft-green">
-                  <div className="mini-card-header">TRY A DECISION</div><h3>Can I afford this monthly cost?</h3><p>Estimate the effect on projected net profit over the next three months.</p>
-                  <div className="mini-form-row"><label><span>Monthly cost (CAD)</span><input min="0" onChange={(event) => setMonthlyCost(Number(event.target.value) || 0)} type="number" value={monthlyCost} /></label><label><span>Starts in</span><input min={nextMonth} onChange={(event) => setStartMonth(event.target.value)} type="month" value={startMonth} /></label></div>
-                  <div className="mini-figure">Projected net profit after this cost</div><div className="mini-value">{formatMoney(scenarioProfit)}</div><p className="mini-note">Estimate includes {addedCostMonths} months of this cost and assumes your recent trend continues.</p>
-                </div></div>
               </section>
-              <section className="bottom-grid"><div className="info-card"><h3>How this estimate is calculated</h3><p>Revenue and net profit are projected from the average month-to-month change across up to the last four recorded months.</p><p>Only months with entries are available. Add more monthly transactions for a steadier estimate.</p></div><div className="info-card"><h3>Latest recorded month</h3><ul className="assumption-list"><li><span>Revenue</span><strong>{formatMoney(latest.totalRevenue)}</strong></li><li><span>Costs</span><strong>{formatMoney(latest.totalCosts)}</strong></li><li><span>Net profit</span><strong>{formatMoney(latest.netProfit)}</strong></li></ul></div></section>
-            </>}
+            ) : (
+              // Remounting on a month change clears the levers with it.
+              <ScenarioWorkspace costs={costs} key={month} month={month} revenue={revenue} />
+            )}
           </div>
         </main>
+      </div>
+    </div>
+  );
+}
+
+type WorkspaceProps = {
+  month: string;
+  costs: Route.ComponentProps["loaderData"]["costs"];
+  revenue: Route.ComponentProps["loaderData"]["revenue"];
+};
+
+function ScenarioWorkspace({ month, costs, revenue }: WorkspaceProps) {
+  const [levers, setLevers] = useState<Levers>(NO_CHANGE);
+
+  const base = buildBaseline(costs, revenue);
+  // Both columns run through the same maths so the comparison is honest.
+  const current = applyScenario(base, NO_CHANGE);
+  const scenario = applyScenario(base, levers);
+
+  const profitChange = scenario.netProfit - current.netProfit;
+  const yearlyImpact = profitChange * 12;
+  const changed = hasChanges(levers);
+
+  const chartData = [
+    { name: "Revenue", today: current.totalRevenue, scenario: scenario.totalRevenue },
+    { name: "Costs", today: current.totalCosts, scenario: scenario.totalCosts },
+    { name: "Net profit", today: current.netProfit, scenario: scenario.netProfit },
+  ];
+
+  return (
+    <>
+      <section className="forecast-banner scenario-banner">
+        <div>
+          <span className="banner-label">BASED ON {monthLabel(month).toUpperCase()}</span>
+          <h2>{describeScenario(levers, current, scenario)}</h2>
+          <p className={`yearly-impact${yearlyImpact < 0 ? " is-down" : " is-up"}`}>
+            Yearly impact: {yearlyImpact >= 0 ? "+" : "−"}
+            {formatMoney(Math.abs(yearlyImpact))}
+          </p>
+        </div>
+      </section>
+
+      <section className="stats-row">
+        <StatCard label="Revenue" scenario={scenario.totalRevenue} today={current.totalRevenue} />
+        <StatCard invert label="Costs" scenario={scenario.totalCosts} today={current.totalCosts} />
+        <StatCard label="Net profit" scenario={scenario.netProfit} today={current.netProfit} />
+        <MarginCard current={current} scenario={scenario} />
+      </section>
+
+      <section className="forecast-main-grid">
+        <div className="chart-card">
+          <div className="chart-header-row">
+            <h3 className="chart-title">Today vs your scenario</h3>
+            <span className="filter-pill">{changed ? "Scenario applied" : "No changes yet"}</span>
+          </div>
+          <div className="chart-wrap">
+            <ResponsiveContainer height={300} width="100%">
+              <BarChart data={chartData} margin={{ top: 12, right: 8, left: 8, bottom: 8 }}>
+                <CartesianGrid stroke="#dfe9e5" strokeDasharray="3 3" vertical={false} />
+                <XAxis
+                  axisLine={false}
+                  dataKey="name"
+                  tick={{ fill: "#7a8885", fontSize: 12 }}
+                  tickLine={false}
+                />
+                <YAxis
+                  axisLine={false}
+                  tick={{ fill: "#7a8885", fontSize: 11 }}
+                  tickFormatter={(value: number) => `${Math.round(value / 1000)}k`}
+                  tickLine={false}
+                />
+                <Tooltip
+                  contentStyle={{ borderRadius: 12, border: "1px solid #dfe7e2", background: "#fff" }}
+                  formatter={(value: number) => formatMoney(value)}
+                />
+                <Legend wrapperStyle={{ fontSize: 13, paddingTop: 8 }} />
+                <Bar
+                  dataKey="today"
+                  fill={TODAY_COLOR}
+                  isAnimationActive={false}
+                  name="Today"
+                  radius={[5, 5, 0, 0]}
+                />
+                <Bar
+                  dataKey="scenario"
+                  fill={SCENARIO_COLOR}
+                  isAnimationActive={false}
+                  name="Scenario"
+                  radius={[5, 5, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="right-panel">
+          <LeverPanel
+            base={base}
+            current={current}
+            levers={levers}
+            onChange={setLevers}
+            onReset={() => setLevers(NO_CHANGE)}
+            scenario={scenario}
+          />
+        </div>
+      </section>
+
+      <section className="bottom-grid">
+        <ComparisonTable current={current} scenario={scenario} />
+        <div className="info-card">
+          <h3>How this works</h3>
+          <p>
+            Selling more food or drinks raises what you buy: food inventory moves with sales volume,
+            not with the prices on your menu.
+          </p>
+          <p>
+            A price change lifts earnings only — and each staff change costs that role&apos;s own pay
+            rate, adjusted by the wages slider.
+          </p>
+          <p>Hidden costs stay put, and nothing on this page is ever written back to your data.</p>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function StatCard({
+  label,
+  today,
+  scenario,
+  invert = false,
+}: {
+  label: string;
+  today: number;
+  scenario: number;
+  invert?: boolean;
+}) {
+  const change = scenario - today;
+  const good = invert ? change < 0 : change > 0;
+
+  return (
+    <div className="stat-card">
+      <div className="stat-label">{label}</div>
+      <div className="stat-value">{formatMoney(scenario)}</div>
+      <div className="stat-delta">
+        {change === 0 ? (
+          <span className="delta-flat">vs {formatMoney(today)} today</span>
+        ) : (
+          <>
+            <span className={`delta-badge${good ? " is-good" : " is-bad"}`}>
+              {change > 0 ? "▲" : "▼"} {formatMoney(Math.abs(change))}
+            </span>
+            <span className="delta-flat">vs {formatMoney(today)} today</span>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MarginCard({ current, scenario }: { current: Outcome; scenario: Outcome }) {
+  const change =
+    current.profitMargin === null || scenario.profitMargin === null
+      ? 0
+      : Math.round((scenario.profitMargin - current.profitMargin) * 10) / 10;
+
+  return (
+    <div className="stat-card">
+      <div className="stat-label">Profit margin</div>
+      <div className="stat-value">{formatPercent(scenario.profitMargin)}</div>
+      <div className="stat-delta">
+        {change === 0 ? (
+          <span className="delta-flat">vs {formatPercent(current.profitMargin)} today</span>
+        ) : (
+          <>
+            <span className={`delta-badge${change > 0 ? " is-good" : " is-bad"}`}>
+              {change > 0 ? "▲" : "▼"} {Math.abs(change).toFixed(1)} pts
+            </span>
+            <span className="delta-flat">vs {formatPercent(current.profitMargin)} today</span>
+          </>
+        )}
       </div>
     </div>
   );

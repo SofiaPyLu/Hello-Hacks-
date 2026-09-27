@@ -49,3 +49,29 @@ export type Revenue = {
   customersBySubcategory: Record<EarningCategory, number>;
   entries: Entry[];
 };
+
+export type Cell = {
+  amount: number;
+  entries: number;
+  count?: number;
+  payPerPerson?: number | null;
+  customers?: number;
+};
+
+export type SheetRow = {
+  category?: CostCategory;
+  subcategory: string;
+  cells: Record<string, Cell>;
+};
+
+export type SheetTotals = Pick<
+  Summary,
+  "totalCosts" | "totalRevenue" | "netProfit" | "profitMargin" | "customers"
+>;
+
+export type Sheet = {
+  months: string[];
+  costs: SheetRow[];
+  earnings: SheetRow[];
+  totals: Record<string, SheetTotals>;
+};
