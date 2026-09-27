@@ -12,7 +12,7 @@ import "../styles/home.css";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "EZ Money | Overview" },
+    { title: "EZ Money" },
     { name: "description", content: "Your money, moving in sync." },
   ];
 }

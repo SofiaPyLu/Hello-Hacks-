@@ -17,7 +17,7 @@ export default function SectionPage() {
   return (
     <div className="section-page">
       <section className="section-summary">
-        <div><span className="section-eyebrow">CASH SYNC · YOUR FINANCES</span><h2>{page.title}</h2><p>{page.description}</p></div>
+        <div><span className="section-eyebrow">YOUR FINANCES</span><h2>{page.title}</h2><p>{page.description}</p></div>
         <button className="section-action"><Icon name="plus" /> {page.action}</button>
         <div className="section-stat"><strong>{page.stat}</strong><span>{page.label}</span></div>
       </section>

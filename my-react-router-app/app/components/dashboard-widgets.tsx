@@ -24,13 +24,6 @@ export function BalanceCard() {
       </div>
       <p className="balance-amount">$18,420<span>.00</span><small>CAD</small></p>
       <p className="balance-change"><span>↗ 12.8%</span> <span>vs. last month</span></p>
-      <div className="balance-bottom">
-        <div aria-label="Revenue trend over the last week" className="balance-sparkline">
-          {[28, 39, 34, 50, 42, 66, 56, 75, 61, 84, 70, 96, 78, 100].map((height, index) => (
-            <span key={index} style={{ height: `${height}%` }} />
-          ))}
-        </div>
-      </div>
     </section>
   );
 }
