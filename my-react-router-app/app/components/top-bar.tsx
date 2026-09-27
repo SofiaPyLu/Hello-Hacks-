@@ -5,6 +5,7 @@ import { Icon } from "./icon";
 const pageTitles: Record<string, string> = {
   "/": "Overview",
   "/transactions": "Transactions",
+  "/ledger": "Ledger",
   "/insights": "Insights",
   
   "/scheduled": "Scheduled payments",
