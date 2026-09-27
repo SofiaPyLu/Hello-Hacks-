@@ -21,9 +21,9 @@ const validRevenue = {
   month: "2026-09",
   type: "revenue",
   category: "sales",
-  subcategory: "dine-in",
-  amount: 28000,
-  customers: 950,
+  subcategory: "food",
+  amount: 26000,
+  customers: 1100,
 };
 
 test("valid cost", () => {
@@ -49,7 +49,7 @@ test("salary ignores sent amount", () => {
 test("valid revenue keeps customers", () => {
   const r = validateEntry(validRevenue);
   assert.equal(r.ok, true);
-  assert.equal(r.entry.customers, 950);
+  assert.equal(r.entry.customers, 1100);
 });
 
 test("check 1: null body", () => {
@@ -108,8 +108,14 @@ test("check 7: string amount rejected", () => {
   assert.match(validateEntry({ ...validCost, amount: "900" }).error, /amount/);
 });
 
-test("check 8: missing customers", () => {
-  assert.match(validateEntry({ ...validRevenue, customers: undefined }).error, /customers/);
+test("check 8: missing customers defaults to 0", () => {
+  const r = validateEntry({ ...validRevenue, customers: undefined });
+  assert.equal(r.ok, true);
+  assert.equal(r.entry.customers, 0);
+});
+
+test("check 8: negative customers rejected", () => {
+  assert.match(validateEntry({ ...validRevenue, customers: -1 }).error, /customers/);
 });
 
 test("check 9: long note", () => {

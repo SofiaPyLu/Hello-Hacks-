@@ -47,7 +47,7 @@ function validateEntry(body) {
     amount = body.amount;
   }
 
-  if (body.type === "revenue") {
+  if (body.type === "revenue" && body.customers !== undefined) {
     if (typeof body.customers !== "number" || !Number.isInteger(body.customers) || body.customers < 0) {
       return { ok: false, error: "customers must be an integer >= 0" };
     }
@@ -68,7 +68,7 @@ function validateEntry(body) {
     entry.count = body.count;
     entry.payPerPerson = body.payPerPerson;
   }
-  if (body.type === "revenue") entry.customers = body.customers;
+  if (body.type === "revenue") entry.customers = body.customers ?? 0;
   if (body.note !== undefined) entry.note = body.note;
 
   return { ok: true, entry };

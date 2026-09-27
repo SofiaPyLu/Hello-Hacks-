@@ -78,13 +78,27 @@ test("POST salary computes amount", async () => {
   assert.equal(body.amount, 6400);
 });
 
-test("POST revenue without customers returns 400", async () => {
+test("POST revenue without customers is saved with customers 0", async () => {
   const res = await post({
     month: "2026-09",
     type: "revenue",
     category: "sales",
-    subcategory: "dine-in",
+    subcategory: "beverages",
     amount: 1000,
+  });
+  const body = await res.json();
+  assert.equal(res.status, 201);
+  assert.equal(body.customers, 0);
+});
+
+test("POST revenue with negative customers returns 400", async () => {
+  const res = await post({
+    month: "2026-09",
+    type: "revenue",
+    category: "sales",
+    subcategory: "beverages",
+    amount: 1000,
+    customers: -1,
   });
   assert.equal(res.status, 400);
 });

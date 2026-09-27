@@ -16,6 +16,7 @@ app.use("/api/summary", require("./src/routes/summary"));
 app.use("/api/history", require("./src/routes/history"));
 app.use("/api/entries", require("./src/routes/entries"));
 app.use("/api/ai-summary", require("./src/routes/aiSummary"));
+app.use("/api/data", require("./src/routes/data"));
 
 app.use((req, res) => res.status(404).json({ error: "not found" }));
 app.use((err, req, res, next) => {
