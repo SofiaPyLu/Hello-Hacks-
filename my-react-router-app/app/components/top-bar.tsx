@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useLocation } from "react-router";
 import { Icon } from "./icon";
 
@@ -19,6 +20,7 @@ type TopBarProps = { onMenuClick: () => void };
 export function TopBar({ onMenuClick }: TopBarProps) {
   const { pathname } = useLocation();
   const title = pageTitles[pathname] ?? "Overview";
+  const [showNotifications, setShowNotifications] = useState(false);
 
   return (
     <header className="top-bar">
@@ -35,10 +37,23 @@ export function TopBar({ onMenuClick }: TopBarProps) {
           <input aria-label="Search" placeholder="Search anything..." type="search" />
           <kbd>⌘ K</kbd>
         </label>
-        <button aria-label="Notifications" className="notification-button">
-          <Icon name="bell" />
-          <span />
-        </button>
+        <div className="notification-wrap">
+          <button
+            aria-controls="notification-message"
+            aria-expanded={showNotifications}
+            aria-label="Notifications"
+            className="notification-button"
+            onClick={() => setShowNotifications((visible) => !visible)}
+            type="button"
+          >
+            <Icon name="bell" />
+          </button>
+          {showNotifications ? (
+            <div className="notification-message" id="notification-message" role="status">
+              No notifications for now
+            </div>
+          ) : null}
+        </div>
         <button aria-label="Open Shawn Mendes's profile" className="profile-button">
           <span className="avatar">S</span>
           <span className="profile-name">Shawn Mendes</span>

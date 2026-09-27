@@ -901,20 +901,29 @@ body {
   height: 34px;
 }
 
+.notification-wrap {
+  position: relative;
+}
+
+.notification-message {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 12px);
+  right: -12px;
+  width: max-content;
+  max-width: min(260px, calc(100vw - 32px));
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(20 40 30 / 12%);
+  color: var(--ink);
+  font-size: 13px;
+}
+
 .notification-button svg {
   width: 18px;
   height: 18px;
-}
-
-.notification-button span {
-  position: absolute;
-  top: 7px;
-  right: 7px;
-  width: 6px;
-  height: 6px;
-  border: 1px solid #fff;
-  border-radius: 50%;
-  background: #ee866d;
 }
 
 .profile-button {

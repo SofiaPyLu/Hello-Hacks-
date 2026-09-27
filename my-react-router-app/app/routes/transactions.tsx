@@ -133,6 +133,7 @@ export default function Transactions({ loaderData }: Route.ComponentProps) {
   const [showForm, setShowForm] = useState(false);
 
   const isEmptyMonth = costs.entries.length === 0 && revenue.entries.length === 0;
+  const formOpen = showForm || isEmptyMonth;
 
   const costSlices: Slice[] = (Object.keys(COST_META) as CostCategory[]).map((key) => ({
     key,
@@ -156,8 +157,15 @@ export default function Transactions({ loaderData }: Route.ComponentProps) {
           <p>A clear view of where your money goes.</p>
           <div className="transactions-toolbar">
             <MonthPicker month={month} />
-            <button className="section-action" onClick={() => setShowForm((open) => !open)} type="button">
-              <Icon name="plus" /> Add transaction
+            <button
+              aria-controls="transaction-entry-form"
+              aria-expanded={formOpen}
+              className="section-action"
+              disabled={isEmptyMonth}
+              onClick={() => setShowForm((open) => !open)}
+              type="button"
+            >
+              <Icon name="plus" /> {isEmptyMonth ? "Form open" : formOpen ? "Close form" : "Add transaction"}
             </button>
           </div>
         </div>
@@ -166,6 +174,8 @@ export default function Transactions({ loaderData }: Route.ComponentProps) {
           <span>Net income this month</span>
         </div>
       </section>
+
+      {formOpen ? <div id="transaction-entry-form"><TransactionForm month={month} /></div> : null}
 
       <div className="pie-grid">
         <BreakdownPie
@@ -181,8 +191,6 @@ export default function Transactions({ loaderData }: Route.ComponentProps) {
           total={revenue.total}
         />
       </div>
-
-      {showForm || isEmptyMonth ? <TransactionForm month={month} /> : null}
 
       <EntryList costs={costs.entries} earnings={revenue.entries} />
 
