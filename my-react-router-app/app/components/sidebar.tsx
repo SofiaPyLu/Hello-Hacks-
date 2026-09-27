@@ -11,8 +11,6 @@ const walletLinks = [
 
 const paymentLinks = [
   { label: "Scheduled", to: "/scheduled", icon: "calendar" },
-  { label: "Payment Request", to: "/payment-request", icon: "send" },
-  { label: "Invoicing", to: "/invoicing", icon: "file" },
   { label: "Forecast", to: "/forecast", icon: "chart" },
 ] as const;
 
@@ -34,17 +32,11 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       <aside className={`sidebar${open ? " is-open" : ""}`}>
         <NavLink className="brand-lockup" onClick={onClose} to="/">
           <img
-            src="/Logo%20-%20EZ%20Money.png"
-            alt="EZ Money"
-            style={{
-              display: "block",
-              width: "140px",
-              maxWidth: "100%",
-              height: "auto",
-              objectFit: "contain",
-              flexShrink: 0,
-            }}
+            className="sidebar-brand-logo"
+            src={ezMoneyLogo}
+            alt="EZ Money logo"
           />
+          <span className="brand-name">EZ <span>Money</span></span>
         </NavLink>
 
         <nav aria-label="Main navigation" className="side-navigation">

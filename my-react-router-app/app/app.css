@@ -84,10 +84,20 @@ body {
 .brand-lockup {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   width: fit-content;
   padding: 0;
   text-decoration: none;
+}
+
+.sidebar-brand-logo {
+  display: block;
+  width: 56px;
+  max-width: 100%;
+  height: auto;
+  flex: 0 0 auto;
+  object-fit: contain;
+  filter: brightness(1.85) saturate(1.2) hue-rotate(8deg);
 }
 
 .brand-logo-frame {
