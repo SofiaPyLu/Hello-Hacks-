@@ -11,11 +11,13 @@ const walletLinks = [
 
 const paymentLinks = [
   { label: "Scheduled", to: "/scheduled", icon: "calendar" },
-
-
+  { label: "Forecast", to: "/forecast", icon: "chart" },
 ] as const;
 
-type SidebarProps = { open: boolean; onClose: () => void };
+type SidebarProps = {
+  open: boolean;
+  onClose: () => void;
+};
 
 export function Sidebar({ open, onClose }: SidebarProps) {
   return (
@@ -26,27 +28,36 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         onClick={onClose}
         tabIndex={open ? 0 : -1}
       />
+
       <aside className={`sidebar${open ? " is-open" : ""}`}>
         <NavLink className="brand-lockup" onClick={onClose} to="/">
-          <span className="brand-logo-frame">
-            <img alt="EZ Money logo" src={ezMoneyLogo} />
-          </span>
+          <img
+            className="sidebar-brand-logo"
+            src={ezMoneyLogo}
+            alt="EZ Money logo"
+          />
           <span className="brand-name">EZ <span>Money</span></span>
         </NavLink>
+
         <nav aria-label="Main navigation" className="side-navigation">
           <p className="nav-section-title">MONEY MANAGEMENT</p>
           <ul className="nav-list">
             {walletLinks.map((item) => (
               <li key={item.to}>
                 <NavLink
-                  className={({ isActive }) => `nav-link${isActive ? " is-active" : ""}`}
+                  className={({ isActive }) =>
+                    `nav-link${isActive ? " is-active" : ""}`
+                  }
                   end={item.to === "/"}
                   onClick={onClose}
                   to={item.to}
                 >
                   <Icon className="nav-icon" name={item.icon} />
                   <span>{item.label}</span>
-                  {item.label === "Transactions" && <span className="nav-count">4</span>}
+
+                  {item.label === "Transactions" && (
+                    <span className="nav-count">4</span>
+                  )}
                 </NavLink>
               </li>
             ))}
@@ -56,7 +67,9 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             {paymentLinks.map((item) => (
               <li key={item.to}>
                 <NavLink
-                  className={({ isActive }) => `nav-link${isActive ? " is-active" : ""}`}
+                  className={({ isActive }) =>
+                    `nav-link${isActive ? " is-active" : ""}`
+                  }
                   onClick={onClose}
                   to={item.to}
                 >
@@ -67,9 +80,13 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             ))}
           </ul>
         </nav>
+
         <div className="sidebar-footer">
           <span className="security-dot" />
-          <div><strong>All systems secure</strong><span>Your money is protected</span></div>
+          <div>
+            <strong>All systems secure</strong>
+            <span>Your money is protected</span>
+          </div>
         </div>
       </aside>
     </>

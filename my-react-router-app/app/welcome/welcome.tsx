@@ -5,7 +5,7 @@ export function Welcome() {
     <main className="welcome-page">
       <div className="welcome-layout">
         <header className="welcome-brand">
-          <img src={logoLight} alt="React Router" />
+          <img className="brand-image" src="/Logo - EZ Money.png" alt="EZ Money" />
         </header>
         <nav className="welcome-panel">
           <p className="welcome-message">Hello?</p>
