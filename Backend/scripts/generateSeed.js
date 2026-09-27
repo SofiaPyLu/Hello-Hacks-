@@ -14,9 +14,9 @@ const september = {
     { subcategory: "processed", amount: 1800 },
   ],
   revenue: [
-    { subcategory: "dine-in", amount: 28000, customers: 950 },
-    { subcategory: "takeout", amount: 8000, customers: 300 },
-    { subcategory: "delivery", amount: 6000, customers: 150 },
+    { subcategory: "food", amount: 26000, customers: 1100 },
+    { subcategory: "beverages", amount: 9000, customers: 0 },
+    { subcategory: "orders", amount: 7000, customers: 300 },
   ],
 };
 
