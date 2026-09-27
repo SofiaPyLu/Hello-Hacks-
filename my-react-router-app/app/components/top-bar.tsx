@@ -26,7 +26,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
         <Icon name="menu" />
       </button>
       <div className="top-heading">
-        <p className="welcome-line">Welcome back, Shawn <span>✦</span></p>
+        <p className="welcome-line">EZ Money</p>
         <h1>{title}</h1>
       </div>
       <div className="top-actions">

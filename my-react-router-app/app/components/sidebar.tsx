@@ -36,7 +36,6 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             src={ezMoneyLogo}
             alt="EZ Money logo"
           />
-          <span className="brand-name">EZ <span>Money</span></span>
         </NavLink>
 
         <nav aria-label="Main navigation" className="side-navigation">
@@ -81,13 +80,6 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           </ul>
         </nav>
 
-        <div className="sidebar-footer">
-          <span className="security-dot" />
-          <div>
-            <strong>All systems secure</strong>
-            <span>Your money is protected</span>
-          </div>
-        </div>
       </aside>
     </>
   );

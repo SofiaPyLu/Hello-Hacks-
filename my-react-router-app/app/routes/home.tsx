@@ -3,7 +3,7 @@ import { BalanceCard, BudgetCard, TransactionsList } from "../components/dashboa
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "EZ Money | Overview" },
+    { title: "EZ Money" },
     { name: "description", content: "Your money, moving in sync." },
   ];
 }
