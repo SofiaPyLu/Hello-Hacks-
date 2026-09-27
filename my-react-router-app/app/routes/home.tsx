@@ -4,10 +4,9 @@ import type { Route } from "./+types/home";
 import { BackendError } from "../components/backend-error";
 import { MonthPicker } from "../components/month-picker";
 import { HealthCard } from "../components/home/health-card";
-import { MonthActivity } from "../components/home/month-activity";
 import { RevenueCard } from "../components/home/revenue-card";
 import { RevenueExpenseChart } from "../components/home/revenue-expense-chart";
-import { getHistory, getRevenue, getSummary } from "../lib/api";
+import { getHistory, getSummary } from "../lib/api";
 import { resolveMonth } from "../lib/month";
 import "../styles/home.css";
 
@@ -21,8 +20,8 @@ export function meta({}: Route.MetaArgs) {
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const history = await getHistory();
   const month = resolveMonth(request, history);
-  const [summary, revenue] = await Promise.all([getSummary(month), getRevenue(month)]);
-  return { month, history, summary, revenue };
+  const summary = await getSummary(month);
+  return { month, history, summary };
 }
 clientLoader.hydrate = true as const;
 
@@ -40,7 +39,7 @@ export function ErrorBoundary() {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { month, history, summary, revenue } = loaderData;
+  const { month, history, summary } = loaderData;
 
   return (
     <div className="overview-page">
@@ -48,7 +47,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <div className="home-toolbar"><MonthPicker month={month} /></div>
         <RevenueCard history={history} month={month} />
         <RevenueExpenseChart history={history} month={month} />
-        <MonthActivity month={month} revenue={revenue} summary={summary} />
       </div>
       <aside className="overview-side-column">
         <HealthCard summary={summary} />
