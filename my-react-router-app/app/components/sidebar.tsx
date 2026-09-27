@@ -53,10 +53,6 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 >
                   <Icon className="nav-icon" name={item.icon} />
                   <span>{item.label}</span>
-
-                  {item.label === "Transactions" && (
-                    <span className="nav-count">4</span>
-                  )}
                 </NavLink>
               </li>
             ))}

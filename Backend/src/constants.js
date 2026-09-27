@@ -6,7 +6,7 @@ const CATEGORIES = {
     salaries: ["chef", "waiter", "host"],
   },
   revenue: {
-    sales: ["dine-in", "takeout", "delivery"],
+    sales: ["food", "beverages", "orders"],
   },
 };
 

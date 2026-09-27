@@ -1,4 +1,5 @@
 import { useState, type KeyboardEvent } from "react";
+import { Link } from "react-router";
 import { Icon } from "./icon";
 
 const costs = [
@@ -43,7 +44,7 @@ export function TransactionsList() {
     <section className="content-panel transactions-panel">
       <div className="panel-heading">
         <div><h2>Earnings &amp; costs</h2><p>Keep track of money coming in and going out</p></div>
-        <a className="text-link" href="/transactions">View all <Icon name="chevron" /></a>
+        <Link className="text-link" to="/transactions">View all <Icon name="chevron" /></Link>
       </div>
       <div aria-label="Choose earnings or costs" className="activity-tabs" role="tablist">
         <button

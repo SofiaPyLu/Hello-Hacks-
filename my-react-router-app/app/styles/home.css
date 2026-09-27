@@ -1,0 +1,72 @@
+.chart-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.health-margin {
+  margin: 4px 0 0;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.health-margin-label {
+  margin: 2px 0 0;
+  color: #29352e;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.health-net {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.health-net.is-negative {
+  color: #a95f5d;
+  font-weight: 600;
+}
+
+.health-ratios {
+  display: grid;
+  margin: 18px 0 0;
+  padding: 0;
+  gap: 14px;
+  list-style: none;
+}
+
+.health-ratio-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #29352e;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.health-ratio-head span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.health-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.health-ratio p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.home-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}

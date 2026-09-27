@@ -12,7 +12,7 @@
   { "id": 11, "month": "2026-09", "type": "cost", "category": "salaries", "subcategory": "chef", "count": 2, "payPerPerson": 3200, "amount": 6400 },
   { "id": 12, "month": "2026-09", "type": "cost", "category": "salaries", "subcategory": "waiter", "count": 4, "payPerPerson": 1800, "amount": 7200 },
   { "id": 13, "month": "2026-09", "type": "cost", "category": "salaries", "subcategory": "host", "count": 1, "payPerPerson": 2000, "amount": 2000 },
-  { "id": 14, "month": "2026-09", "type": "revenue", "category": "sales", "subcategory": "dine-in", "amount": 28000, "customers": 950 },
-  { "id": 15, "month": "2026-09", "type": "revenue", "category": "sales", "subcategory": "takeout", "amount": 8000, "customers": 300 },
-  { "id": 16, "month": "2026-09", "type": "revenue", "category": "sales", "subcategory": "delivery", "amount": 6000, "customers": 150 }
+  { "id": 14, "month": "2026-09", "type": "revenue", "category": "sales", "subcategory": "food", "amount": 26000, "customers": 1100 },
+  { "id": 15, "month": "2026-09", "type": "revenue", "category": "sales", "subcategory": "beverages", "amount": 9000, "customers": 0 },
+  { "id": 16, "month": "2026-09", "type": "revenue", "category": "sales", "subcategory": "orders", "amount": 7000, "customers": 300 }
 ]

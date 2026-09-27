@@ -8,8 +8,8 @@ test("calculates September revenue and customer totals", () => {
   assert.equal(result.total, 42000);
   assert.equal(result.customers, 1400);
   assert.equal(result.avgSpendPerCustomer, 30);
-  assert.equal(result.bySubcategory["dine-in"], 28000);
-  assert.equal(result.customersBySubcategory.takeout, 300);
+  assert.equal(result.bySubcategory.food, 26000);
+  assert.equal(result.customersBySubcategory.orders, 300);
   assert.equal(result.entries.length, 3);
 });
 
