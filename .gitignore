@@ -2,3 +2,6 @@ node_modules/
 .env
 .react-router/
 build/
+
+# Playwright MCP scratch output
+.playwright-mcp/
